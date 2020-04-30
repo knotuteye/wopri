@@ -17,8 +17,10 @@ let QNUMBER = 0
 let QN_ARRAY = []
 
 const init = () => {
-	if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('service-worker.js')
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker.register('/wopri/service-worker.js', {
+			scope: '/wopri/',
+		})
 	}
 	gameWindow.style.display = 'none'
 	fetchQuestion()
