@@ -7,7 +7,7 @@ const qNumberText = document.getElementById('qn-number').children[0]
 
 //Config
 let AMOUNT = 15
-let DIFFICULTY = 'easy'
+let DIFFICULTY = ''
 let TYPE = 'multiple'
 let CATEGORY = 18
 
@@ -27,7 +27,7 @@ const init = () => {
 const fetchQuestion = () => {
 	let url = `https://opentdb.com/api.php?amount=${AMOUNT}&difficulty=${DIFFICULTY}&type=${TYPE}&category=${CATEGORY}`
 	fetch(url)
-		.then((response) => response.json())	
+		.then((response) => response.json())
 		.then((data) => {
 			QN_ARRAY = data.results
 			return QN_ARRAY
@@ -54,14 +54,29 @@ const keepScore = (event) => {
 		event.target.nextSibling.nextSibling
 	if (activeLbl.innerHTML == ANSWER) {
 		scoreInt.innerText = parseInt(scoreInt.innerText) + 20
-		animateAnswerHolder(activeLbl.closest('.answer-holder'), true)
+		animateAll(activeLbl, true)
 	} else {
-		animateAnswerHolder(activeLbl.closest('.answer-holder'), false)
+		animateAll(activeLbl, false)
 	}
 }
 
+const animateAll = (activeLbl, isCorrect) => {
+	animateAnswerHolder(activeLbl.closest('.answer-holder'), isCorrect)
+	animateQuestionHolder(isCorrect)
+}
+
 const gameOver = (score) => {
-	window.location.href = './gameOver.html'
+	// window.location.href = './gameOver.html'
+}
+
+const animateQuestionHolder = (isCorrect) => {
+	if (isCorrect) {
+		questionHolder.classList.add('fadeOut')
+		setTimeout(() => {
+			questionHolder.classList.replace('fadeOut', 'fadeIn')
+		}, 500)
+		questionHolder.classList.remove('fadeInRight')
+	}
 }
 
 const animateAnswerHolder = (ansHolder, isCorrect) => {
