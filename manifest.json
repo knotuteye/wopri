@@ -1,0 +1,23 @@
+{
+	"name": "Wopri",
+	"short_name": "Wopri",
+	"description": "Test your smarts",
+	"lang": "en-US",
+	"start_url": "/index.html",
+	"display": "standalone",
+	"orientation": "portrait",
+	"theme_color": "#f27121",
+	"icons": [
+		{
+			"src": "res/img/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "res/img/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		}
+	],
+	"background_color": "#743385"
+}
