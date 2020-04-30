@@ -1,0 +1,154 @@
+* {
+	margin: 0;
+	/* transition: all 0.6s ease-in-out; */
+	color: white;
+	user-select: none;
+}
+#app {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	min-height: 100vh;
+	padding: 1rem;
+	box-sizing: border-box;
+	background: #8a2387;
+	background-clip: padding-box;
+	background: linear-gradient(30deg, #337585, #f27121, #e94057, #743385);
+	background-position-x: left;
+	background-position-y: bottom;
+	background-size: 400% 400%;
+	animation: osmosis 15s ease-in-out 0s infinite normal both;
+}
+
+#qn-number {
+	font-family: Manrope, Roboto;
+	font-size: 26px;
+}
+
+#score {
+	color: white;
+	font-family: Manrope, Roboto;
+	font-size: 26px;
+	position: absolute;
+	right: 10px;
+}
+
+#question-holder {
+	font-family: Manrope, Roboto;
+	justify-items: center;
+	margin: 0 auto;
+	width: fit-content;
+	margin-top: 4rem;
+	color: white;
+}
+
+#question {
+	text-decoration: none;
+	width: 100%;
+	margin: 0;
+	font-weight: 300;
+	font-size: 2.2em;
+	margin-bottom: 1.5rem;
+}
+
+.answer-holder {
+	border: 1px #fff solid;
+	border-radius: 10px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	padding: 1rem;
+	display: flex;
+	max-width: 40rem;
+	align-items: center;
+	transition: background-color 200ms ease-in-out;
+}
+
+@media (pointer: fine) {
+	.answer-holder:hover {
+		background-color: #ffffffcc;
+	}
+
+	.answer-holder:hover > label {
+		color: #743385;
+		font-weight: bold;
+	}
+	.answer-holder:hover > .radio-btn {
+		border-color: #743385;
+	}
+
+	.answer-holder:hover > .radio-btn > .radio-inner {
+		background-color: #743385;
+	}
+}
+
+@media (pointer: coarse) {
+	.answer-holder:active {
+		background-color: #ffffffcc;
+	}
+	.answer-holder:active > label {
+		color: #743385;
+		font-weight: bold;
+	}
+	.answer-holder:active > .radio-btn {
+		border-color: #743385;
+	}
+
+	.answer-holder:active > .radio-btn > .radio-inner {
+		background-color: #743385;
+	}
+}
+
+.answer-holder.correct {
+	background-color: #00ff0085;
+}
+
+.answer-holder.correct > label {
+	color: white;
+}
+
+.answer-holder.wrong {
+	background-color: #ff00008e;
+}
+
+.answer-holder.wrong > label {
+	color: white;
+}
+
+.answer-holder.wrong > .radio-btn {
+	border-color: white;
+}
+
+.answer-holder.wrong > .radio-btn > .radio-inner,
+.answer-holder.correct > .radio-btn > .radio-inner {
+	background-color: white;
+}
+
+.radio-btn {
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.radio-inner {
+	position: absolute;
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+}
+
+.answer-holder > label {
+	margin-left: 2rem;
+	font-size: 1.4em;
+}
+
+@keyframes osmosis {
+	50% {
+		background-position-x: right;
+		background-position-y: top;
+	}
+}

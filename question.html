@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@300&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="res/css/animate.css" />
+		<link rel="stylesheet" href="res/css/style.css" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Wopri</title>
+	</head>
+	<body onload="init()">
+		<div id="app">
+			<div id="game-window" class="animated flipInY">
+				<p id="score"><span>0</span></p>
+				<p id="qn-number"><span></span>/15</p>
+				<div id="question-holder" class="animated">
+					<p id="question"></p>
+					<div class="answer-holder">
+						<div class="radio-btn">
+							<div class="radio-inner"></div>
+						</div>
+						<label for="answer"></label>
+					</div>
+					<div class="answer-holder">
+						<div class="radio-btn">
+							<div class="radio-inner"></div>
+						</div>
+						<label for="answer"></label>
+					</div>
+					<div class="answer-holder">
+						<div class="radio-btn">
+							<div class="radio-inner"></div>
+						</div>
+						<label for="answer"></label>
+					</div>
+					<div class="answer-holder">
+						<div class="radio-btn">
+							<div class="radio-inner"></div>
+						</div>
+						<label for="answer"></label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="res/js/question.js"></script>
+	</body>
+</html>
