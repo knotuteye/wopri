@@ -3,7 +3,7 @@
 	"short_name": "Wopri",
 	"description": "Test your smarts",
 	"lang": "en-US",
-	"start_url": "/index.html",
+	"start_url": "/wopri/index.html",
 	"display": "standalone",
 	"orientation": "portrait",
 	"theme_color": "#f27121",
