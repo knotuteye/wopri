@@ -1,15 +1,18 @@
+const homeWindow = document.getElementById('home')
 const gameWindow = document.getElementById('game-window')
+const gameOverWindow = document.getElementById('game-over')
 const questionHolder = document.getElementById('question-holder')
 const questionText = document.getElementById('question')
 const answerBoxes = document.getElementsByClassName('answer-holder')
 const scoreInt = document.getElementById('score').children[0]
+const finalScorePct = document.getElementById('final-score')
 const qNumberText = document.getElementById('qn-number').children[0]
 
 //Config
 let AMOUNT = 15
 let DIFFICULTY = ''
 let TYPE = 'multiple'
-let CATEGORY = 18
+let CATEGORY = ''
 
 //Var
 let ANSWER = ''
@@ -18,15 +21,28 @@ let QN_ARRAY = []
 
 const init = () => {
 	if (navigator.serviceWorker) {
-		navigator.serviceWorker.register('/wopri/service-worker.js', {
-			scope: '/wopri/',
+		navigator.serviceWorker.register('/service-worker.js', {
+			scope: '/',
 		})
 	}
-	gameWindow.style.display = 'none'
+}
+
+const startGame = () => {
+	gameWindow.hidden = true
+	animateStartGame()
 	fetchQuestion()
 	for (let i = 0; i < answerBoxes.length; i++) {
 		answerBoxes[i].addEventListener('click', keepScore)
 	}
+}
+
+const animateStartGame = () => {
+	homeWindow.classList.add('flipOutY')
+	setTimeout(() => {
+		setTimeout(() => {
+			homeWindow.hidden = true
+		}, 300)
+	}, 300)
 }
 
 const fetchQuestion = () => {
@@ -38,18 +54,20 @@ const fetchQuestion = () => {
 			return QN_ARRAY
 		})
 		.then((arr) => getNextQuestion(arr[QNUMBER]))
-		.catch((err) => console.error(err))
+		.catch((err) => onDeviceOffline())
 }
 
 const getNextQuestion = (obj) => {
 	ANSWER = decodeHTMLString(obj.correct_answer)
-	questionText.innerHTML = obj.question
-	answerBoxes[0].children[1].innerHTML = obj.correct_answer
+	questionText.innerText = decodeHTMLString(obj.question)
+	answerBoxes[0].children[1].innerText = decodeHTMLString(obj.correct_answer)
 	for (let i = 0; i < obj.incorrect_answers.length; i++) {
-		answerBoxes[i + 1].children[1].innerHTML = obj.incorrect_answers[i]
+		answerBoxes[i + 1].children[1].innerText = decodeHTMLString(
+			obj.incorrect_answers[i]
+		)
 	}
 	qNumberText.innerText = ++QNUMBER
-	gameWindow.style.display = ''
+	gameWindow.style.display = 'block'
 }
 
 const keepScore = (event) => {
@@ -57,7 +75,7 @@ const keepScore = (event) => {
 		event.target.querySelector('.answer-holder label') ||
 		event.target.closest('.answer-holder label') ||
 		event.target.nextSibling.nextSibling
-	if (activeLbl.innerHTML == ANSWER) {
+	if (activeLbl.innerText == ANSWER) {
 		scoreInt.innerText = parseInt(scoreInt.innerText) + 20
 		animateAll(activeLbl, true)
 	} else {
@@ -70,8 +88,13 @@ const animateAll = (activeLbl, isCorrect) => {
 	animateQuestionHolder(isCorrect)
 }
 
-const gameOver = (score) => {
-	// window.location.href = './gameOver.html'
+const gameOver = () => {
+	finalScorePct.innerText = `${((100 * (QNUMBER - 1)) / 15).toFixed(0)}%`
+	gameWindow.classList.replace('flipInY', 'slideOutUp')
+	setTimeout(() => {
+		gameWindow.style.display = 'none'
+	}, 250)
+	gameOverWindow.style.display = 'block'
 }
 
 const animateQuestionHolder = (isCorrect) => {
@@ -80,7 +103,7 @@ const animateQuestionHolder = (isCorrect) => {
 		setTimeout(() => {
 			questionHolder.classList.replace('fadeOut', 'fadeIn')
 		}, 500)
-		questionHolder.classList.remove('fadeInRight')
+		questionHolder.classList.remove('fadeOut')
 	}
 }
 
@@ -100,4 +123,8 @@ const decodeHTMLString = (HTMLString) => {
 	let field = document.createElement('textarea')
 	field.innerHTML = HTMLString
 	return field.innerText
+}
+
+const onDeviceOffline = () => {
+	document.write('Device Offline')
 }

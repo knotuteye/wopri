@@ -4,9 +4,9 @@
 	"description": "Test your smarts",
 	"lang": "en-US",
 	"start_url": "/wopri/",
-	"display": "standalone",
+	"display": "fullscreen",
 	"orientation": "portrait",
-	"theme_color": "#f27121",
+	"theme_color": "#743385",
 	"icons": [
 		{
 			"src": "res/img/icon-512.png",
