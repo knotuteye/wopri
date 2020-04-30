@@ -19,12 +19,12 @@ const RUNTIME = 'runtime'
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
-	'../../index.html',
-	'./res/css/style.css',
-	'./res/css/animate.css',
-	'./res/img/icon-192.png',
-	'./res/img/icon-512.png',
-	'./res/js/main.js',
+	'./wopri/index.html',
+	'./wopri/res/css/style.css',
+	'./wopri/res/css/animate.css',
+	'./wopri/res/img/icon-192.png',
+	'./wopri/res/img/icon-512.png',
+	'./wopri/res/js/main.js',
 ]
 
 // The install handler takes care of precaching the resources we always need.
