@@ -21,7 +21,7 @@ let QN_ARRAY = []
 const init = () => {
 	if (navigator.serviceWorker) {
 		navigator.serviceWorker.register('/service-worker.js', {
-			scope: '/',
+			scope: '/wopri/',
 		})
 	}
 }
