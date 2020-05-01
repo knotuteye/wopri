@@ -19,6 +19,11 @@ let QNUMBER = 0
 let QN_ARRAY = []
 
 const startGame = () => {
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker.register('/wopri/service-worker.js', {
+			scope: '/wopri/',
+		})
+	}
 	gameWindow.hidden = true
 	animateStartGame()
 	fetchQuestion()
