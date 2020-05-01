@@ -4,7 +4,6 @@ const gameOverWindow = document.getElementById('game-over')
 const questionHolder = document.getElementById('question-holder')
 const questionText = document.getElementById('question')
 const answerBoxes = document.getElementsByClassName('answer-holder')
-const scoreInt = document.getElementById('score').children[0]
 const finalScorePct = document.getElementById('final-score')
 const qNumberText = document.getElementById('qn-number').children[0]
 
@@ -76,7 +75,6 @@ const keepScore = (event) => {
 		event.target.closest('.answer-holder label') ||
 		event.target.nextSibling.nextSibling
 	if (activeLbl.innerText == ANSWER) {
-		scoreInt.innerText = parseInt(scoreInt.innerText) + 20
 		animateAll(activeLbl, true)
 	} else {
 		animateAll(activeLbl, false)
@@ -93,7 +91,9 @@ const gameOver = () => {
 	gameWindow.classList.replace('flipInY', 'slideOutUp')
 	setTimeout(() => {
 		gameWindow.style.display = 'none'
-	}, 250)
+		console.log(gameWindow.classList)
+	}, 600)
+
 	gameOverWindow.style.display = 'block'
 }
 
@@ -102,8 +102,8 @@ const animateQuestionHolder = (isCorrect) => {
 		questionHolder.classList.add('fadeOut')
 		setTimeout(() => {
 			questionHolder.classList.replace('fadeOut', 'fadeIn')
-		}, 500)
-		questionHolder.classList.remove('fadeOut')
+		}, 600)
+		questionHolder.classList.remove('fadeIn')
 	}
 }
 
@@ -126,5 +126,5 @@ const decodeHTMLString = (HTMLString) => {
 }
 
 const onDeviceOffline = () => {
-	document.write('Device Offline')
+	alert('Device Offline')
 }
