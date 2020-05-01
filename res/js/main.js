@@ -68,14 +68,26 @@ const fetchQuestion = () => {
 }
 
 const getNextQuestion = (obj) => {
+	let arr = []
+	for (let i = 0; i < 4; i++) {
+		let x = (Math.random() * 3).toFixed(0)
+		while (arr.includes(x)) {
+			x = (Math.random() * 4).toFixed(0)
+		}
+		arr.push(x)
+	}
+
 	ANSWER = decodeHTMLString(obj.correct_answer)
-	questionText.innerText = decodeHTMLString(obj.question)
-	answerBoxes[0].children[1].innerText = decodeHTMLString(obj.correct_answer)
-	for (let i = 0; i < obj.incorrect_answers.length; i++) {
-		answerBoxes[i + 1].children[1].innerText = decodeHTMLString(
-			obj.incorrect_answers[i]
+	let optionsArr = [obj.correct_answer, ...obj.incorrect_answers]
+	let i = arr.length
+	while (i-- != 0) {
+		answerBoxes[arr[i]].children[1].innerText = decodeHTMLString(
+			optionsArr[i]
 		)
 	}
+	console.log(answerBoxes)
+
+	questionText.innerText = decodeHTMLString(obj.question)
 	qNumberText.innerText = ++QNUMBER
 	gameWindow.style.display = 'block'
 }
