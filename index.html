@@ -58,7 +58,7 @@
 	<body onload="init()">
 		<script>const init = () => {
 			if (navigator.serviceWorker) {
-				navigator.serviceWorker.register('/service-worker.js', {
+				navigator.serviceWorker.register('/wopri/service-worker.js', {
 					scope: '/wopri/',
 				})
 			}
