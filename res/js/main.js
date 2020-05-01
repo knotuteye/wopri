@@ -18,14 +18,6 @@ let ANSWER = ''
 let QNUMBER = 0
 let QN_ARRAY = []
 
-const init = () => {
-	if (navigator.serviceWorker) {
-		navigator.serviceWorker.register('/service-worker.js', {
-			scope: '/wopri/',
-		})
-	}
-}
-
 const startGame = () => {
 	gameWindow.hidden = true
 	animateStartGame()
