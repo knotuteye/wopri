@@ -8,10 +8,8 @@ const finalScorePct = document.getElementById('final-score')
 const qNumberText = document.getElementById('qn-number').children[0]
 
 //Config
-let AMOUNT = 15
-let DIFFICULTY = ''
-let TYPE = 'multiple'
-let CATEGORY = ''
+let CATEGORIES = [17, 18, 19, 30, 23, 20, 9, 27]
+let DIFFICULTIES = ['easy', 'medium', 'hard']
 
 //Var
 let ANSWER = ''
@@ -36,15 +34,36 @@ const animateStartGame = () => {
 	}, 300)
 }
 
+const generateQuestionSeed = () => {
+	let arr = []
+	while (arr.length < 15) {
+		let x =
+			CATEGORIES[(Math.random() * CATEGORIES.length - 1).toFixed(0)] ||
+			CATEGORIES[0]
+		let y =
+			DIFFICULTIES[
+				(Math.random() * DIFFICULTIES.length - 1).toFixed(0)
+			] || DIFFICULTIES[0]
+		arr.push({ category: x, difficulty: y })
+	}
+	return arr
+}
+
 const fetchQuestion = () => {
-	let url = `https://opentdb.com/api.php?amount=${AMOUNT}&difficulty=${DIFFICULTY}&type=${TYPE}&category=${CATEGORY}`
-	fetch(url)
-		.then((response) => response.json())
-		.then((data) => {
-			QN_ARRAY = data.results
-			return QN_ARRAY
+	Promise.all(
+		generateQuestionSeed().map((qSeed) => {
+			let url = `https://opentdb.com/api.php?amount=1&difficulty=${qSeed.difficulty}&type=multiple&category=${qSeed.category}`
+			return fetch(url)
+				.then((response) => response.json())
+				.then((data) => {
+					QN_ARRAY.push(data.results[0])
+				})
 		})
-		.then((arr) => getNextQuestion(arr[QNUMBER]))
+	)
+		.then(() => {
+			console.log(QN_ARRAY)
+			getNextQuestion(QN_ARRAY[QNUMBER])
+		})
 		.catch((err) => onDeviceOffline())
 }
 
@@ -83,7 +102,6 @@ const gameOver = () => {
 	gameWindow.classList.replace('flipInY', 'slideOutUp')
 	setTimeout(() => {
 		gameWindow.style.display = 'none'
-		console.log(gameWindow.classList)
 	}, 600)
 
 	gameOverWindow.style.display = 'block'
