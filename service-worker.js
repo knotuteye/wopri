@@ -6,7 +6,6 @@ var URLS = [
 	'/wopri/',
 	'/wopri/index.html',
 	'/wopri/res/css/style.css',
-	'/wopri/res/css/animate.css',
 	'/wopri/res/img/icon-192.png',
 	'/wopri/res/img/icon-512.png',
 	'/wopri/res/js/main.js', // add path to those files here
