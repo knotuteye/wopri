@@ -61,31 +61,34 @@ const fetchQuestion = () => {
 		})
 	)
 		.then(() => {
-			console.log(QN_ARRAY)
 			getNextQuestion(QN_ARRAY[QNUMBER])
 		})
-		.catch((err) => onDeviceOffline())
+		.catch((err) => onDeviceOffline(err))
 }
 
 const getNextQuestion = (obj) => {
 	let arr = []
-	for (let i = 0; i < 4; i++) {
-		let x = (Math.random() * 3).toFixed(0)
+	let x = (Math.random() * 3).toFixed(0)
+	arr.push(x)
+	while (arr.length < 4) {
+		x = (Math.random() * 3).toFixed(0)
 		while (arr.includes(x)) {
-			x = (Math.random() * 4).toFixed(0)
+			x = (Math.random() * 3).toFixed(0)
 		}
 		arr.push(x)
 	}
 
 	ANSWER = decodeHTMLString(obj.correct_answer)
-	let optionsArr = [obj.correct_answer, ...obj.incorrect_answers]
+	let optionsArr = [
+		obj.correct_answer,
+		...obj.incorrect_answers,
+	].map((value) => decodeHTMLString(value))
+
 	let i = arr.length
-	while (i-- != 0) {
-		answerBoxes[arr[i]].children[1].innerText = decodeHTMLString(
-			optionsArr[i]
-		)
+	while (i-- > 0) {
+		answerBoxes[i].querySelector('label').innerText = optionsArr[arr[i]]
 	}
-	console.log(answerBoxes)
+	console.log(obj.correct_answer)
 
 	questionText.innerText = decodeHTMLString(obj.question)
 	qNumberText.innerText = ++QNUMBER
@@ -147,6 +150,6 @@ const decodeHTMLString = (HTMLString) => {
 	return field.innerText
 }
 
-const onDeviceOffline = () => {
-	alert('Device Offline')
+const onDeviceOffline = (err) => {
+	console.error(err)
 }
