@@ -8,8 +8,8 @@ const finalScorePct = document.getElementById('final-score')
 const qNumberText = document.getElementById('qn-number').children[0]
 
 //Config
-let CATEGORIES = [17, 18, 19, 30, 23, 20, 9, 27]
-let DIFFICULTIES = ['easy', 'medium', 'hard']
+let CATEGORIES = [17, 18, 19, 30, 23, 20, 27]
+let DIFFICULTIES = ['easy', 'easy', 'easy', 'medium', 'hard']
 
 //Var
 let ANSWER = ''
@@ -37,15 +37,20 @@ const animateStartGame = () => {
 const generateQuestionSeed = () => {
 	let arr = []
 	while (arr.length < 15) {
+		let y
+		if (arr.length < 5) {
+			y = DIFFICULTIES[0]
+		} else if (arr.length < 10) {
+			y = DIFFICULTIES[1]
+		} else {
+			y = DIFFICULTIES[2]
+		}
 		let x =
 			CATEGORIES[(Math.random() * CATEGORIES.length - 1).toFixed(0)] ||
 			CATEGORIES[0]
-		let y =
-			DIFFICULTIES[
-				(Math.random() * DIFFICULTIES.length - 1).toFixed(0)
-			] || DIFFICULTIES[0]
 		arr.push({ category: x, difficulty: y })
 	}
+
 	return arr
 }
 
@@ -61,12 +66,12 @@ const fetchQuestion = () => {
 		})
 	)
 		.then(() => {
-			getNextQuestion(QN_ARRAY[QNUMBER])
+			renderNextQuestion(QN_ARRAY[QNUMBER])
 		})
 		.catch((err) => onDeviceOffline(err))
 }
 
-const getNextQuestion = (obj) => {
+const renderNextQuestion = (obj) => {
 	let arr = []
 	let x = (Math.random() * 3).toFixed(0)
 	arr.push(x)
@@ -112,14 +117,18 @@ const animateAll = (activeLbl, isCorrect) => {
 	animateQuestionHolder(isCorrect)
 }
 
-const gameOver = () => {
-	finalScorePct.innerText = `${((100 * (QNUMBER - 1)) / 15).toFixed(0)}%`
-	gameWindow.classList.replace('flipInY', 'slideOutUp')
-	setTimeout(() => {
-		gameWindow.style.display = 'none'
-	}, 600)
+const gameOver = (success) => {
+	if (success) {
+		return console.log('lol')
+	} else {
+		finalScorePct.innerText = `${((100 * (QNUMBER - 1)) / 15).toFixed(0)}%`
+		gameWindow.classList.replace('flipInY', 'slideOutUp')
+		setTimeout(() => {
+			gameWindow.style.display = 'none'
+		}, 600)
 
-	gameOverWindow.style.display = 'block'
+		gameOverWindow.style.display = 'block'
+	}
 }
 
 const animateQuestionHolder = (isCorrect) => {
@@ -140,7 +149,8 @@ const animateAnswerHolder = (ansHolder, isCorrect) => {
 	}, 500)
 
 	setTimeout(() => {
-		isCorrect ? getNextQuestion(QN_ARRAY[QNUMBER]) : gameOver()
+		if (QNUMBER == 15) gameOver(true)
+		isCorrect ? renderNextQuestion(QN_ARRAY[QNUMBER]) : gameOver()
 	}, 600)
 }
 
