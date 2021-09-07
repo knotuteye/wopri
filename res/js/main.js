@@ -8,14 +8,12 @@ const answerBoxes = document.getElementsByClassName("answer-holder");
 const finalScorePct = document.getElementById("final-score");
 const qNumberText = document.getElementById("qn-number").children[0];
 
-// Config
-const CATEGORIES = [17, 18, 19, 30, 23, 20, 27];
+//  Compose Function
+const compose =
+  (...fxns) =>
+  (x) =>
+    fxns.reduceRight((y, f) => f(y), x);
 
-/**
- * This serves as a factory for objects stored in localStorage
- * @param {string} key
- * @param {Function} inputTransformer
- */
 const LOCAL_STORAGE_FACTORY = (
   key,
   inputTransformer = (x) => x,
@@ -36,9 +34,19 @@ const QN_ARRAY = LOCAL_STORAGE_FACTORY(
 );
 
 const startGame = () => {
+  compose(
+    hideGameWindow,
+    animateStartGame,
+    fetchQuestion,
+    initEventListeners
+  )();
+};
+
+const hideGameWindow = () => {
   gameWindow.hidden = true;
-  animateStartGame();
-  fetchQuestion();
+};
+
+const initEventListeners = () => {
   answerBoxes = answerBoxes.map((x) => x.addEventListener("click", keepScore));
 };
 
@@ -49,17 +57,19 @@ const animateStartGame = () => {
   }, 600);
 };
 
-const generateQuestionSeed = () =>
+const generateQuestionSeed = () => {
+  const CATEGORIES = [17, 18, 19, 30, 23, 20, 27];
   Array.from({ length: 15 }).map(
     (_) => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)]
   );
+};
 
 const fetchQuestion = async () => {
   const categoryList = generateQuestionSeed();
   const categoryDictionary = {};
 
   categoryList.forEach(
-    (x) => (categoryDictionary[x] = categoryDictionary[x] || 0 + 1)
+    (x) => (categoryDictionary[x] = categoryDictionary[x] + 1)
   );
 
   try {
