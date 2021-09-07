@@ -10,7 +10,6 @@ const qNumberText = document.getElementById("qn-number").children[0];
 
 // Config
 const CATEGORIES = [17, 18, 19, 30, 23, 20, 27];
-const DIFFICULTIES = ["easy", "easy", "easy", "medium", "hard"];
 
 /**
  * This serves as a factory for objects stored in localStorage
@@ -40,89 +39,65 @@ const startGame = () => {
   gameWindow.hidden = true;
   animateStartGame();
   fetchQuestion();
-  for (let i = 0; i < answerBoxes.length; i++) {
-    answerBoxes[i].addEventListener("click", keepScore);
-  }
+  answerBoxes = answerBoxes.map((x) => x.addEventListener("click", keepScore));
 };
 
 const animateStartGame = () => {
   homeWindow.classList.add("flipOutY");
   setTimeout(() => {
-    setTimeout(() => {
-      homeWindow.hidden = true;
-    }, 300);
-  }, 300);
+    homeWindow.hidden = true;
+  }, 600);
 };
 
-const generateQuestionSeed = () => {
-  let arr = [];
-  while (arr.length < 15) {
-    let y;
-    if (arr.length < 5) {
-      y = DIFFICULTIES[0];
-    } else if (arr.length < 10) {
-      y = DIFFICULTIES[1];
-    } else {
-      y = DIFFICULTIES[2];
-    }
-    let x =
-      CATEGORIES[(Math.random() * CATEGORIES.length - 1).toFixed(0)] ||
-      CATEGORIES[0];
-    arr.push({ category: x, difficulty: y });
+const generateQuestionSeed = () =>
+  Array.from({ length: 15 }).map(
+    (_) => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)]
+  );
+
+const fetchQuestion = async () => {
+  const categoryList = generateQuestionSeed();
+  const categoryDictionary = {};
+
+  categoryList.forEach(
+    (x) => (categoryDictionary[x] = categoryDictionary[x] || 0 + 1)
+  );
+
+  try {
+    await Promise.all(
+      Object.keys(categoryDictionary).map(async (category) => {
+        const url = `https://opentdb.com/api.php?amount=${categoryDictionary[category]}&difficulty=easy&type=multiple&category=${category}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        QN_ARRAY.set(QN_ARRAY.get().concat(data.results));
+      })
+    );
+    renderNextQuestion(QN_ARRAY.get()[QNUMBER.get()]);
+  } catch (err) {
+    onDeviceOffline(err);
   }
-
-  return arr;
-};
-
-const fetchQuestion = () => {
-  Promise.all(
-    generateQuestionSeed().map((qSeed) => {
-      let url = `https://opentdb.com/api.php?amount=1&difficulty=${qSeed.difficulty}&type=multiple&category=${qSeed.category}`;
-      return fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          QN_ARRAY.set(QN_ARRAY.get().concat(data.results[0]));
-        });
-    })
-  )
-    .then(() => {
-      renderNextQuestion(QN_ARRAY.get()[QNUMBER.get()]);
-    })
-    .catch((err) => onDeviceOffline(err));
 };
 
 const renderNextQuestion = (obj) => {
-  let arr = [];
-  let x = (Math.random() * 3).toFixed(0);
-  arr.push(x);
-  while (arr.length < 4) {
-    x = (Math.random() * 3).toFixed(0);
-    while (arr.includes(x)) {
-      x = (Math.random() * 3).toFixed(0);
-    }
-    arr.push(x);
-  }
+  questionText.innerText = decodeHTMLString(obj.question);
 
   ANSWER.set(decodeHTMLString(obj.correct_answer));
 
-  let optionsArr = [obj.correct_answer, ...obj.incorrect_answers].map((value) =>
-    decodeHTMLString(value)
-  );
+  [obj.correct_answer, ...obj.incorrect_answers]
+    .map((value) => decodeHTMLString(value))
+    .sort(() => 0.5 - Math.random())
+    .forEach((x, i) => {
+      answerBoxes[i].querySelector("label").innerText = x;
+    });
 
-  let i = arr.length;
-  while (i-- > 0) {
-    answerBoxes[i].querySelector("label").innerText = optionsArr[arr[i]];
-  }
-  console.log(obj.correct_answer);
-
-  questionText.innerText = decodeHTMLString(obj.question);
   QNUMBER.set(QNUMBER.get() + 1);
   qNumberText.innerText = QNUMBER.get();
   gameWindow.style.display = "block";
+
+  console.log(obj.correct_answer);
 };
 
 const keepScore = (event) => {
-  let activeLbl =
+  const activeLbl =
     event.target.querySelector(".answer-holder label") ||
     event.target.closest(".answer-holder label") ||
     event.target.nextSibling.nextSibling;
@@ -178,7 +153,7 @@ const animateAnswerHolder = (ansHolder, isCorrect) => {
 };
 
 const decodeHTMLString = (HTMLString) => {
-  let field = document.createElement("textarea");
+  const field = document.createElement("textarea");
   field.innerHTML = HTMLString;
   return field.innerText;
 };
