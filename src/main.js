@@ -33,20 +33,29 @@ const LOCAL_STORAGE_FACTORY = (
 };
 
 const ANSWER = LOCAL_STORAGE_FACTORY("answer");
-const QNUMBER = LOCAL_STORAGE_FACTORY("qnumber");
+const QNUMBER = LOCAL_STORAGE_FACTORY(
+  "qnumber",
+  (x) => x.toString(),
+  (x) => parseInt(x)
+);
 const QN_ARRAY = LOCAL_STORAGE_FACTORY(
   "qn_array",
   (x) => JSON.stringify(x),
   (x) => JSON.parse(x)
 );
 
-const startGame = () =>
+const startGame = () => {
+  ANSWER.set("");
+  QNUMBER.set(0);
+  QN_ARRAY.set([]);
+
   compose(
     hideGameWindow,
     animateStartGame,
     fetchQuestion,
     initEventListeners
   )();
+};
 
 const hideGameWindow = () => {
   useDOM().gameWindow.hidden = true;
@@ -67,7 +76,7 @@ const animateStartGame = () => {
 
 const generateQuestionSeed = () => {
   const CATEGORIES = [17, 18, 19, 30, 23, 20, 27];
-  Array.from({ length: 15 }).map(
+  return Array.from({ length: 15 }).map(
     (_) => CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)]
   );
 };
@@ -77,7 +86,7 @@ const fetchQuestion = async () => {
   const categoryDictionary = {};
 
   categoryList.forEach(
-    (x) => (categoryDictionary[x] = categoryDictionary[x] + 1)
+    (x) => (categoryDictionary[x] = (categoryDictionary[x] || 0) + 1)
   );
 
   try {
@@ -89,6 +98,7 @@ const fetchQuestion = async () => {
         QN_ARRAY.set(QN_ARRAY.get().concat(data.results));
       })
     );
+
     renderNextQuestion(QN_ARRAY.get()[QNUMBER.get()]);
   } catch (err) {
     onDeviceOffline(err);
