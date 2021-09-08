@@ -1,19 +1,25 @@
-// DOM Elements
-const homeWindow = document.getElementById("home");
-const gameWindow = document.getElementById("game-window");
-const gameOverWindow = document.getElementById("game-over");
-const questionHolder = document.getElementById("question-holder");
-const questionText = document.getElementById("question");
-const answerBoxes = document.getElementsByClassName("answer-holder");
-const finalScorePct = document.getElementById("final-score");
-const qNumberText = document.getElementById("qn-number").children[0];
+// Pattern 1: Mediator Pattern
+const useDOM = () => {
+  // We can do any calculations or state update here
+  return {
+    homeWindow: document.getElementById("home"),
+    gameWindow: document.getElementById("game-window"),
+    gameOverWindow: document.getElementById("game-over"),
+    questionHolder: document.getElementById("question-holder"),
+    questionText: document.getElementById("question"),
+    answerBoxes: document.getElementsByClassName("answer-holder"),
+    finalScorePct: document.getElementById("final-score"),
+    qNumberText: document.getElementById("qn-number").children[0],
+  };
+};
 
-//  Compose Function
+// Compose Function
 const compose =
   (...fxns) =>
   (x) =>
     fxns.reduceRight((y, f) => f(y), x);
 
+// Pattern 2: Factory Pattern
 const LOCAL_STORAGE_FACTORY = (
   key,
   inputTransformer = (x) => x,
@@ -21,6 +27,7 @@ const LOCAL_STORAGE_FACTORY = (
 ) => {
   return {
     set: (value) => window.localStorage.setItem(key, inputTransformer(value)),
+    // Pattern 3: Decorator
     get: () => outputTransformer(window.localStorage.getItem(key)),
   };
 };
@@ -33,27 +40,28 @@ const QN_ARRAY = LOCAL_STORAGE_FACTORY(
   (x) => JSON.parse(x)
 );
 
-const startGame = () => {
+const startGame = () =>
   compose(
     hideGameWindow,
     animateStartGame,
     fetchQuestion,
     initEventListeners
   )();
-};
 
 const hideGameWindow = () => {
-  gameWindow.hidden = true;
+  useDOM().gameWindow.hidden = true;
 };
 
 const initEventListeners = () => {
-  answerBoxes = answerBoxes.map((x) => x.addEventListener("click", keepScore));
+  useDOM().answerBoxes = useDOM().answerBoxes.map((x) =>
+    x.addEventListener("click", keepScore)
+  );
 };
 
 const animateStartGame = () => {
-  homeWindow.classList.add("flipOutY");
+  useDOM().homeWindow.classList.add("flipOutY");
   setTimeout(() => {
-    homeWindow.hidden = true;
+    useDOM().homeWindow.hidden = true;
   }, 600);
 };
 
@@ -88,7 +96,7 @@ const fetchQuestion = async () => {
 };
 
 const renderNextQuestion = (obj) => {
-  questionText.innerText = decodeHTMLString(obj.question);
+  useDOM().questionText.innerText = decodeHTMLString(obj.question);
 
   ANSWER.set(decodeHTMLString(obj.correct_answer));
 
@@ -96,12 +104,12 @@ const renderNextQuestion = (obj) => {
     .map((value) => decodeHTMLString(value))
     .sort(() => 0.5 - Math.random())
     .forEach((x, i) => {
-      answerBoxes[i].querySelector("label").innerText = x;
+      useDOM().answerBoxes[i].querySelector("label").innerText = x;
     });
 
   QNUMBER.set(QNUMBER.get() + 1);
-  qNumberText.innerText = QNUMBER.get();
-  gameWindow.style.display = "block";
+  useDOM().qNumberText.innerText = QNUMBER.get();
+  useDOM().gameWindow.style.display = "block";
 
   console.log(obj.correct_answer);
 };
@@ -127,25 +135,26 @@ const gameOver = (success) => {
   if (success) {
     return console.log("lol");
   } else {
-    finalScorePct.innerText = `${((100 * (QNUMBER.get() - 1)) / 15).toFixed(
-      0
-    )}%`;
-    gameWindow.classList.replace("flipInY", "slideOutUp");
+    useDOM().finalScorePct.innerText = `${(
+      (100 * (QNUMBER.get() - 1)) /
+      15
+    ).toFixed(0)}%`;
+    useDOM().gameWindow.classList.replace("flipInY", "slideOutUp");
     setTimeout(() => {
-      gameWindow.style.display = "none";
+      useDOM().gameWindow.style.display = "none";
     }, 600);
 
-    gameOverWindow.style.display = "block";
+    useDOM().gameOverWindow.style.display = "block";
   }
 };
 
 const animateQuestionHolder = (isCorrect) => {
   if (isCorrect) {
-    questionHolder.classList.add("fadeOut");
+    useDOM().questionHolder.classList.add("fadeOut");
     setTimeout(() => {
-      questionHolder.classList.replace("fadeOut", "fadeIn");
+      useDOM().questionHolder.classList.replace("fadeOut", "fadeIn");
     }, 600);
-    questionHolder.classList.remove("fadeIn");
+    useDOM().questionHolder.classList.remove("fadeIn");
   }
 };
 
