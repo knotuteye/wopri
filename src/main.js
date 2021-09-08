@@ -53,7 +53,7 @@ const hideGameWindow = () => {
 };
 
 const initEventListeners = () => {
-  useDOM().answerBoxes = useDOM().answerBoxes.map((x) =>
+  useDOM().answerBoxes = [...useDOM().answerBoxes].map((x) =>
     x.addEventListener("click", keepScore)
   );
 };
