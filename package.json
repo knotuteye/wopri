@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "build":"npm i jest",
+        "test": "npm run jest"
+    }
+}
