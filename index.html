@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="preconnect" href="https://opentdb.com" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Wopri" />
+    <meta name="apple-mobile-web-app-title" content="Wopri" />
+    <meta name="theme-color" content="#743385" />
+    <meta name="msapplication-navbutton-color" content="#743385" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="msapplication-starturl" content="/index.html" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://knotuteye.github.io/wopri/" />
+    <meta property="og:title" content="Wopri!" />
+    <meta
+      property="og:description"
+      content="Test your smarts! A 'Who Wants to Be Rich'-themed progressive web game built with JavaScript."
+    />
+    <meta
+      property="og:image"
+      content="https://knotuteye.github.io/wopri/res/img/screen.png"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://knotuteye.github.io/wopri/" />
+    <meta property="twitter:title" content="Wopri!" />
+    <meta
+      property="twitter:description"
+      I
+      content="Test your smarts! A 'Who Wants to Be Rich'-themed progressive web game built with JavaScript."
+    />
+    <meta
+      property="twitter:image"
+      content="https://knotuteye.github.io/wopri/res/img/screen.png"
+    />
+
+    <meta name="author" content="Kevin Otuteye" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="res/img/icon-512.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      sizes="512x512"
+      href="res/img/icon-512.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="res/img/icon-192.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      sizes="192x192"
+      href="res/img/icon-192.png"
+    />
+    <link rel="stylesheet" href="res/css/style.min.css" />
+    <link rel="shortcut icon" href="res/img/icon-512.png" type="image/x-icon" />
+    <link rel="canonical" href="https://knotuteye.github.io/wopri/" />
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Test your smarts! A 'Who Wants to Be Rich'-themed progressive web game built with JavaScript."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wopri!</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="home" class="animated fadeInDown">
+        <h1 id="title">wopri</h1>
+        <h2 id="subtitle">Your head. What's in it?</h2>
+        <button id="start-btn" class="action-btn" onclick="startGame()">
+          Start
+        </button>
+      </div>
+      <div id="game-window" class="animated flipInY">
+        <p id="qn-number"><span></span>/15</p>
+        <div id="question-holder" class="animated">
+          <p id="question"></p>
+          <div class="answer-holder">
+            <div class="radio-btn">
+              <div class="radio-inner"></div>
+            </div>
+            <label for="answer"></label>
+          </div>
+          <div class="answer-holder">
+            <div class="radio-btn">
+              <div class="radio-inner"></div>
+            </div>
+            <label for="answer"></label>
+          </div>
+          <div class="answer-holder">
+            <div class="radio-btn">
+              <div class="radio-inner"></div>
+            </div>
+            <label for="answer"></label>
+          </div>
+          <div class="answer-holder">
+            <div class="radio-btn">
+              <div class="radio-inner"></div>
+            </div>
+            <label for="answer"></label>
+          </div>
+        </div>
+      </div>
+      <div id="game-over" class="animated slideInUp slow">
+        <h1>Game Over</h1>
+        <h2 id="final-score">60%</h2>
+        <button class="action-btn" onclick="location.reload()">Restart</button>
+      </div>
+      <div id="offline" class="animated flipInY">
+        <img src="" alt="" />
+        <h2>You appear to be offline. Please connect to the internet</h2>
+      </div>
+    </div>
+    <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register("/wopri/service-worker.js", {
+          scope: "/wopri/",
+        });
+      }
+    </script>
+    <!-- <script src="res/js/production.js"></script> -->
+    <script src="src/main.min.js"></script>
+  </body>
+</html>
